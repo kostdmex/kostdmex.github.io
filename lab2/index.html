@@ -34,19 +34,21 @@
 <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" placeholder="123-456-789">
 <br>
 <label for="calendar">Data:</label>
-<input type="date"/>
+<input type="date" id="calendardate"/>
 <br>
 <label for="calendarweek">Data z tego tygodnia:</label>
-<input type="date" min="2022-10-17" max="2022-10-21"/>
+<input type="date" id="calendardateweek" min="2022-10-17" max="2022-10-21"/>
 <br>
 <label for="appt-time-12h">Godzina(12h): </label>
-<input id="appt-time-12h" type="time" name="appt-time-12h" min="0:00" max="12:00" value="7:00" />
+<input id="appt-time-12h" type="time" name="appt-time-12h" min="0:00" max="12:00"/>
 <br>
 <label for="appt-time-24h">Godzina(24h): </label>
-<input id="appt-time-24h" type="time" name="appt-time-24h" value="19:00" />
+<input id="appt-time-24h" type="time" name="appt-time-24h"/>
 <br>
 <label for="color">Kolor: </label>
-<input type="color" value="#ff0000" />
+<input type="color" id="color" value="#ff0000" />
+<br>
+<button onclick="generateData()">Generuj dane</button>
 </body>
 </html>
 <style>
@@ -58,3 +60,21 @@ input:not(:focus):not(:placeholder-shown):invalid {
   background-color: rgb(255,0,0);
 }
 </style>
+<script>
+	function generateData(){
+		document.getElementById("email").value="testemail@gmail.com";
+		document.getElementById("postalcode").value="11-234";
+		document.getElementById("nip").value="123-456-12-23";
+		document.getElementById("documentnumber").value="DEF127932";
+		document.getElementById("ip4").value="192.125.221.123";
+		document.getElementById("www").value="http:\/\/www.google.com";
+		document.getElementById("diskpathcasesensitive").value="C:\\windows";
+		document.getElementById("ip6").value="2001:0db8:0000:0000:0000:0000:1428:57ab";
+		document.getElementById("phone").value="346-125-743";
+		document.getElementById("calendardate").value="2022-12-24";
+		document.getElementById("calendardateweek").value="2022-10-19";
+		document.getElementById("appt-time-12h").value="08:00";
+		document.getElementById("appt-time-24h").value="20:00";
+		document.getElementById("color").value="#00ff00";
+	}
+</script>
