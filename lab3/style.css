@@ -1,4 +1,26 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+#tetris {
+	height: 100%;
+	width: 70%;
+	display: flex;
+	flex-direction: column;
+}
 #orderedlist {
 	width: 30%;
 	font-size: 30px;
+}
+#platform {
+	width: 100%;
+	height: 80%;
+	background-color: powderblue;
+}
+#button {
+	background-color: teal;
+	width: 100%;
+	height: 20%;
 }
