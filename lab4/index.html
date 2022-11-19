@@ -49,6 +49,14 @@
 <input type="color" id="color" value="#ff0000" />
 <br>
 <button onclick="generateData()">Generuj dane</button>
+<div id="indexedDBDiv">
+<button onclick="addClient()">Add a client</button>
+<button onclick="clearBooks()">Clear clients</button>
+
+<p>Clients list:</p>
+
+<ul id="listElem"></ul>
+</div>
 </body>
 </html>
 <style>
@@ -61,6 +69,9 @@ input:not(:focus):not(:placeholder-shown):invalid {
 }
 #color {
 	background-color: rgb(255,255,255);
+}
+#indexedDBDiv{
+	margin-top: 1em;
 }
 </style>
 <script>
