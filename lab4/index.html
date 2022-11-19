@@ -51,7 +51,7 @@
 <button onclick="generateData()">Generuj dane</button>
 <div id="indexedDBDiv">
 <button onclick="addClient()">Add a client</button>
-<button >Clear clients</button>
+<button onclick="clearClients()">Clear clients</button>
 
 <p>Clients list:</p>
 
@@ -136,4 +136,12 @@ input:not(:focus):not(:placeholder-shown):invalid {
 		}
 	  }
 	}
+	async function clearClients() {
+	  let tx = db.transaction('clients', 'readwrite');
+	  await tx.objectStore('clients').clear();
+	  await list();
+	}
+	window.addEventListener('unhandledrejection', event => {
+	  alert("Error: " + event.reason.message);
+	});
 </script>
