@@ -136,7 +136,6 @@ input:not(:focus):not(:placeholder-shown):invalid {
 			} catch(err) {
 				if (err.name == 'ConstraintError') {
 					alert("Such client exists already");
-					await addClient();
 				} else {
 					throw err;
 				}
