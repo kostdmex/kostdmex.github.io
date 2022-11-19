@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <body>
+<label for="name">Name:</label>
+<input id="name" name="name" pattern="^[a-zA-Z]*$" placeholder="Kowalski">
+<br>
 <label for="email">Email:</label>
 <input type="email" id="email" name="email" placeholder="test@test.com">
 <br>
@@ -77,6 +80,7 @@ input:not(:focus):not(:placeholder-shown):invalid {
 </style>
 <script>
 	function generateData(){
+		document.getElementById("name").value="Nowak";
 		document.getElementById("email").value="testemail@gmail.com";
 		document.getElementById("postalcode").value="11-234";
 		document.getElementById("nip").value="123-456-12-23";
@@ -112,29 +116,34 @@ input:not(:focus):not(:placeholder-shown):invalid {
 
 	  if (clients.length) {
 		listElem.innerHTML = clients.map(client => `<li>
-        name: ${client.name}, phone: ${client.phone}
+        name: ${client.name}, phone: ${client.phone}, email: ${client.email}
       </li>`).join('');
 	  } else {
 		listElem.innerHTML = '<li>No clients yet. Please add new client.</li>'
 	  }
 	}
 	async function addClient() {
-	  let name = prompt("Enter client name:");
-	  let phone = +prompt("Enter client phone:");
+		if(document.getElementById("name").checkValidity()&&document.getElementById("name").value!=''){
+			let name = document.getElementById("name").value;
+			let phone = document.getElementById("phone").value;
+			let email = document.getElementById("email").value;
 
-	  let tx = db.transaction('clients', 'readwrite');
+			let tx = db.transaction('clients', 'readwrite');
 
-	  try {
-		await tx.objectStore('clients').add({name, phone});
-		await list();
-	  } catch(err) {
-		if (err.name == 'ConstraintError') {
-		  alert("Such client exists already");
-		  await addClient();
+			try {
+				await tx.objectStore('clients').add({name, phone, email});
+				await list();
+			} catch(err) {
+				if (err.name == 'ConstraintError') {
+					alert("Such client exists already");
+					await addClient();
+				} else {
+					throw err;
+				}
+			  }
 		} else {
-		  throw err;
+			alert("Enter valid name");
 		}
-	  }
 	}
 	async function clearClients() {
 	  let tx = db.transaction('clients', 'readwrite');
