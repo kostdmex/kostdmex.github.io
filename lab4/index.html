@@ -51,12 +51,13 @@
 <button onclick="generateData()">Generuj dane</button>
 <div id="indexedDBDiv">
 <button onclick="addClient()">Add a client</button>
-<button onclick="clearBooks()">Clear clients</button>
+<button >Clear clients</button>
 
 <p>Clients list:</p>
 
 <ul id="listElem"></ul>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/idb@3.0.2/build/idb.min.js"></script>
 </body>
 </html>
 <style>
@@ -74,7 +75,7 @@ input:not(:focus):not(:placeholder-shown):invalid {
 	margin-top: 1em;
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/idb@3.0.2/build/idb.min.js">
+<script>
 	function generateData(){
 		document.getElementById("email").value="testemail@gmail.com";
 		document.getElementById("postalcode").value="11-234";
@@ -101,5 +102,38 @@ input:not(:focus):not(:placeholder-shown):invalid {
 	  });
 
 	  list();
+	}
+	
+	async function list() {
+	  let tx = db.transaction('clients');
+	  let clientStore = tx.objectStore('clients');
+
+	  let clients = await clientStore.getAll();
+
+	  if (clients.length) {
+		listElem.innerHTML = clients.map(client => `<li>
+        name: ${client.name}, phone: ${client.phone}
+      </li>`).join('');
+	  } else {
+		listElem.innerHTML = '<li>No clients yet. Please add new client.</li>'
+	  }
+	}
+	async function addClient() {
+	  let name = prompt("Enter client name:");
+	  let phone = +prompt("Enter client phone:");
+
+	  let tx = db.transaction('clients', 'readwrite');
+
+	  try {
+		await tx.objectStore('clients').add({name, phone});
+		await list();
+	  } catch(err) {
+		if (err.name == 'ConstraintError') {
+		  alert("Such client exists already");
+		  await addClient();
+		} else {
+		  throw err;
+		}
+	  }
 	}
 </script>
