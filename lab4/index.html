@@ -91,4 +91,15 @@ input:not(:focus):not(:placeholder-shown):invalid {
 		document.getElementById("appt-time-24h").value="20:00";
 		document.getElementById("color").value="#00ff00";
 	}
+	let db;
+
+	init();
+
+	async function init() {
+	  db = await idb.openDb('clientsDb', 1, db => {
+		db.createObjectStore('clients', {keyPath: 'name'});
+	  });
+
+	  list();
+	}
 </script>
