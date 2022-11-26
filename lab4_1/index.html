@@ -80,16 +80,36 @@ input:not(:focus):not(:placeholder-shown):invalid {
 </style>
 <script>
 	function generateData(){
-		document.getElementById("name").value="Nowak";
-		document.getElementById("email").value="testemail@gmail.com";
-		document.getElementById("postalcode").value="11-234";
+		if(document.getElementById("name").value==''){
+			document.getElementById("name").value="Nowak";
+			document.getElementById("email").value="nowakemail@gmail.com";
+			document.getElementById("postalcode").value="20-111";
+			document.getElementById("documentnumber").value="DEF127932";
+			document.getElementById("phone").value="555-111-222";
+		} else if(document.getElementById("name").value=='Nowak'){
+			document.getElementById("name").value="Kowalski";
+			document.getElementById("email").value="kowalskiemail@gmail.com";
+			document.getElementById("postalcode").value="23-555";
+			document.getElementById("documentnumber").value="XYZ227955";
+			document.getElementById("phone").value="444-555-663";
+		} else if(document.getElementById("name").value=='Kowalski'){
+			document.getElementById("name").value="Mickiewicz";
+			document.getElementById("email").value="mickiewiczemail@gmail.com";
+			document.getElementById("postalcode").value="45-123";
+			document.getElementById("documentnumber").value="ABC123977";
+			document.getElementById("phone").value="222-999-231";
+		} else {
+			document.getElementById("name").value="Nowak";
+			document.getElementById("email").value="nowakemail@gmail.com";
+			document.getElementById("postalcode").value="20-111";
+			document.getElementById("documentnumber").value="DEF127932";
+			document.getElementById("phone").value="555-111-222";
+		}
 		document.getElementById("nip").value="123-456-12-23";
-		document.getElementById("documentnumber").value="DEF127932";
 		document.getElementById("ip4").value="192.125.221.123";
 		document.getElementById("www").value="http:\/\/www.google.com";
 		document.getElementById("diskpathcasesensitive").value="C:\\windows";
 		document.getElementById("ip6").value="2001:0db8:0000:0000:0000:0000:1428:57ab";
-		document.getElementById("phone").value="346-125-743";
 		document.getElementById("calendardate").value="2022-12-24";
 		document.getElementById("calendardateweek").value="2022-10-19";
 		document.getElementById("appt-time-12h").value="08:00";
@@ -115,9 +135,7 @@ input:not(:focus):not(:placeholder-shown):invalid {
 	  let clients = await clientStore.getAll();
 
 	  if (clients.length) {
-		listElem.innerHTML = clients.map(client => `<li>
-        name: ${client.name}, phone: ${client.phone}, email: ${client.email}
-      </li>`).join('');
+		listElem.innerHTML = clients.map(client => `<li> name: ${client.name}, phone: ${client.phone}, email: ${client.email} </li>`).join('');
 	  } else {
 		listElem.innerHTML = '<li>No clients yet. Please add new client.</li>'
 	  }
