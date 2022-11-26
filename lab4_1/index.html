@@ -135,7 +135,11 @@ input:not(:focus):not(:placeholder-shown):invalid {
 	  let clients = await clientStore.getAll();
 
 	  if (clients.length) {
-		listElem.innerHTML = clients.map(client => `<li> name: ${client.name}, phone: ${client.phone}, email: ${client.email} </li>`).join('');
+		listElem.innerHTML = clients.map(client => `<li> name: ${client.name}, 
+		phone: ${client.phone}, 
+		email: ${client.email},
+		postal code: ${client.postalCode}
+		document number: ${client.documentNumber}</li>`).join('');
 	  } else {
 		listElem.innerHTML = '<li>No clients yet. Please add new client.</li>'
 	  }
@@ -145,11 +149,13 @@ input:not(:focus):not(:placeholder-shown):invalid {
 			let name = document.getElementById("name").value;
 			let phone = document.getElementById("phone").value;
 			let email = document.getElementById("email").value;
+			let postalCode = document.getElementById("postalcode").value;
+			let documentNumber = document.getElementById("documentnumber").value;
 
 			let tx = db.transaction('clients', 'readwrite');
 
 			try {
-				await tx.objectStore('clients').add({name, phone, email});
+				await tx.objectStore('clients').add({name, phone, email, postalCode, documentNumber});
 				await list();
 			} catch(err) {
 				if (err.name == 'ConstraintError') {
