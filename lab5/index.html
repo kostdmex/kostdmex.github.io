@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <body>
+<label for="id">Id:</label>
+<input id="id" name="id" type="number" />
+<br>
 <label for="name">Name:</label>
 <input id="name" name="name" pattern="^[a-zA-Z]*$" placeholder="Kowalski">
 <br>
@@ -53,13 +56,15 @@
 <br>
 <button onclick="generateData()">Generuj dane</button>
 <div id="indexedDBDiv">
-<button onclick="addClient()">Add a client</button>
+<button onclick="add()">Add a client</button>
 <button onclick="clearClients()">Clear clients</button>
-
-<p>Clients list:</p>
-
-<ul id="listElem"></ul>
+<div id="searchFiled">
+      <input id="searchBar" name="search" type="text" placeholder="Search..." />
+      <button onclick="return search(event)">Search</button>
 </div>
+<br>
+<div id="tableDiv"></div>
+<br>
 <script src="https://cdn.jsdelivr.net/npm/idb@3.0.2/build/idb.min.js"></script>
 </body>
 </html>
