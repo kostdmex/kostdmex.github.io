@@ -83,7 +83,28 @@ input:not(:focus):not(:placeholder-shown):invalid {
 	margin-top: 1em;
 }
 </style>
-<script>
+<script type="text/javascript">
+	const clientData = [
+        {
+          name: "Ostrowski",
+          email: "kamil@gmail.com",
+          documentnumber: "ABV12357",
+          postalcode: "11-111",
+          phoneNumber: "123456789",
+        },
+      ];
+      window.indexedDB =
+        window.indexedDB ||
+        window.mozIndexedDB ||
+        window.webkitIndexedDB ||
+        window.msIndexedDB;
+
+      window.IDBTransaction =
+        window.IDBTransaction ||
+        window.webkitIDBTransaction ||
+        window.msIDBTransaction;
+      window.IDBKeyRange =
+        window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 	function generateData(){
 		if(document.getElementById("name").value==''){
 			document.getElementById("name").value="Nowak";
@@ -121,85 +142,38 @@ input:not(:focus):not(:placeholder-shown):invalid {
 		document.getElementById("appt-time-24h").value="20:00";
 		document.getElementById("color").value="#00ff00";
 	}
+	
 	let db;
+      let request = window.indexedDB.open("newDatabase", 1);
 
-	init();
+      request.onerror = function (event) {
+        console.log("error: The database is opened failed");
+      };
 
-	async function init() {
-	  db = await idb.openDb('clientsDb', 1, db => {
-		db.createObjectStore('clients', {keyPath: 'name'});
-	  });
+      request.onsuccess = function (event) {
+        db = request.result;
+        console.log("success: The database " + db + " is opened successfully");
+        drawTable();
+      };
 
-	  list();
-	}
-	
-	async function list() {
-	  let tx = db.transaction('clients');
-	  let clientStore = tx.objectStore('clients');
+      request.onupgradeneeded = function (event) {
+        var db = event.target.result;
+        var objectStore = db.createObjectStore("client", {
+          autoIncrement: true,
+        });
 
-	  let clients = await clientStore.getAll();
+        objectStore.createIndex("name", "name", { unique: true });
+        objectStore.createIndex("email", "email", { unique: false });
+        objectStore.createIndex("documentnumber", "documentnumber", { unique: false });
+        objectStore.createIndex("postalcode", "postalcode", { unique: false });
+        objectStore.createIndex("phoneNumber", "phoneNumber", {
+          unique: false,
+        });
+        for (var i in clientData) {
+          objectStore.add(clientData[i]);
+        }
+      };
 
-	  if (clients.length) {
-		listElem.innerHTML = clients.map(client => `<li> name: ${client.name}, 
-		phone: ${client.phone}, 
-		email: ${client.email},
-		postal code: ${client.postalCode}
-		document number: ${client.documentNumber}</li>`).join('');
-	  } else {
-		listElem.innerHTML = '<li>No clients yet. Please add new client.</li>'
-	  }
-	}
-	
-	function fillEditData(id) {
-        document.getElementById("submitBtn").disabled = true;
-        document.getElementById("editBtn").disabled = false;
-
-        var objectStore = db
-          .transaction(["client"], "readwrite")
-          .objectStore("client");
-
-        var request = objectStore.get(id);
-        request.onerror = function (event) {
-          console.log("Something went wrong");
-        };
-        request.onsuccess = function (event) {
-          let data = event.target.result;
-
-          document.getElementById("idInput").value = id;
-          document.getElementById("nameInput").value = data.name;
-          document.getElementById("lastNameInput").value = data.lastName;
-          document.getElementById("ageInput").value = data.age;
-          document.getElementById("emailInput").value = data.email;
-          document.getElementById("peselInput").value = data.pesel;
-          document.getElementById("addressInput").value = data.address;
-          document.getElementById("phoneNumberInput").value = data.phoneNumber;
-        };
-    }
-	  
-	async function addClient() {
-		if(document.getElementById("name").checkValidity()&&document.getElementById("name").value!=''){
-			let name = document.getElementById("name").value;
-			let phone = document.getElementById("phone").value;
-			let email = document.getElementById("email").value;
-			let postalCode = document.getElementById("postalcode").value;
-			let documentNumber = document.getElementById("documentnumber").value;
-
-			let tx = db.transaction('clients', 'readwrite');
-
-			try {
-				await tx.objectStore('clients').add({name, phone, email, postalCode, documentNumber});
-				await list();
-			} catch(err) {
-				if (err.name == 'ConstraintError') {
-					alert("Such client exists already");
-				} else {
-					throw err;
-				}
-			  }
-		} else {
-			alert("Enter valid name");
-		}
-	}
 	async function clearClients() {
 	  let tx = db.transaction('clients', 'readwrite');
 	  await tx.objectStore('clients').clear();
